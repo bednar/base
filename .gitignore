@@ -5,7 +5,7 @@
 atlassian-ide-plugin.xml
 
 # Maven Files #
-# target/
+target/
 tree.txt
 
 # Hibernate Files #
