@@ -1,0 +1,4 @@
+com/github/bednar/base/AbstractBaseTest.class
+com/github/bednar/base/api/ApiInitializationTest.class
+com/github/bednar/base/inject/BaseModuleTest$TypeWithoutExplicitProvider.class
+com/github/bednar/base/inject/BaseModuleTest.class

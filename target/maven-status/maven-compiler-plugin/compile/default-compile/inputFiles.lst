@@ -1,0 +1,16 @@
+/Users/bednar/Developer/bednar/development/base/src/main/java/com/github/bednar/base/api/ApiResource.java
+/Users/bednar/Developer/bednar/development/base/src/main/java/com/github/bednar/base/api/Api.java
+/Users/bednar/Developer/bednar/development/base/src/main/java/com/github/bednar/base/event/Dispatcher.java
+/Users/bednar/Developer/bednar/development/base/src/main/java/com/github/bednar/base/http/AppBootstrap.java
+/Users/bednar/Developer/bednar/development/base/src/main/java/com/github/bednar/base/inject/BaseModule.java
+/Users/bednar/Developer/bednar/development/base/src/main/java/com/github/bednar/base/event/UpdateApplicationEvent.java
+/Users/bednar/Developer/bednar/development/base/src/main/java/com/github/bednar/base/inject/Injector.java
+/Users/bednar/Developer/bednar/development/base/src/main/java/com/github/bednar/base/utils/resource/FluentResource.java
+/Users/bednar/Developer/bednar/development/base/src/main/java/com/github/bednar/base/event/AbstractSubscriber.java
+/Users/bednar/Developer/bednar/development/base/src/main/java/com/github/bednar/base/utils/collection/ListAutoCloseable.java
+/Users/bednar/Developer/bednar/development/base/src/main/java/com/github/bednar/base/event/AbstractEvent.java
+/Users/bednar/Developer/bednar/development/base/src/main/java/com/github/bednar/base/api/ApiExceptionMapper.java
+/Users/bednar/Developer/bednar/development/base/src/main/java/com/github/bednar/base/api/ApiDemonstration.java
+/Users/bednar/Developer/bednar/development/base/src/main/java/com/github/bednar/base/utils/collection/MapDefaultValue.java
+/Users/bednar/Developer/bednar/development/base/src/main/java/com/github/bednar/base/utils/xml/FluentXml.java
+/Users/bednar/Developer/bednar/development/base/src/main/java/com/github/bednar/base/event/UpdateApplicationSubscriber.java
