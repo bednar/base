@@ -3,9 +3,9 @@ language: java
 jdk:
 - oraclejdk7
 
+script: mvn clean install deploy --settings src/main/config/travis-maven-settings.xml
+
 env:
   global:
-  - secure: exThyFPPQAortKtok+FsPZoopzGi1nNG1eYPf2S+vHFYB+q32J36nO73U/xypiQ24ybChXSKUul+4udLuDz4DSdpZuzm90goWTUClIQWAUu/FIas/KjZ70i0AdRkOSIRl2vPRyZzpymHpALADfsXJSHOtxv+juXfcmz7+mUT1tI=
-  - secure: Zq9uXgS6u+9JRLJMPSVYGX/V78gTUo+5PIyIGFd1fCPv05pvUCgX5Vb/3VVj474ETDZesLiNKhWrOeDPpG4yWuqk0EdTMeqWbD74GlEP9GuiMLVVzpTyOIPuNxcI+otlWQh4FcNCdT/HRUOaKW29fCRJAmLBmR5tFjfZjbbEvuY=
-
-script: 'mvn clean install deploy --settings src/main/config/travis-maven-settings.xml'
+  - secure: O7KLqditNNaKTyC1ac2O9TnFqvPCMwCO01DMlh0JUTuD1YmMYRvvzq/98hGkyTsc1y6tJYyQ9aIaepnnb5OBALmmNVQCpZB2UI+Qh0rJcNg9dU87n2sg9Orfit6O9BDi8ievTuPSVIZz5v5yivg0S4orCZrUUwlQ1Q1AUnUbNcI=
+  - secure: P38hvoPdqoUHjops+bSce2mx3D5FMyhHYMfsINXbyMvY/T607xGeVg3e5anue0FROzJzseLo1LLJtldkGCABQzfnwBUhlsZqvMYoXcMkGfuGYOcn4wwswEFCESWMvmUCLoUXVhcQT1fey39aJTeFqIb030zPYf1VNCxngGOkADI=
