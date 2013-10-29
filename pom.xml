@@ -106,12 +106,6 @@
             <id>snapshots-github</id>
             <name>Snapshots GitHub</name>
             <url>http://nexus-bednar.rhcloud.com/nexus/content/repositories/snapshots-github/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
         </repository>
 
     </repositories>
