@@ -34,6 +34,16 @@
         <url-pattern>/api.js</url-pattern>
     </servlet-mapping>
 
+    <filter>
+        <filter-name>AppContext</filter-name>
+        <filter-class>com.github.bednar.base.http.AppContext</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>AppContext</filter-name>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
+
     <listener>
         <listener-class>com.github.bednar.base.http.AppBootstrap</listener-class>
     </listener>

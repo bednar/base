@@ -5,7 +5,9 @@ import javax.inject.Inject;
 
 import com.github.bednar.base.AbstractBaseTest;
 import com.github.bednar.base.event.Dispatcher;
+import com.github.bednar.base.http.AppContext;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -13,6 +15,14 @@ import org.junit.Test;
  */
 public class BaseModuleTest extends AbstractBaseTest
 {
+    private Injector injector;
+
+    @Before
+    public void before()
+    {
+        injector = AppContext.getInjector();
+    }
+
     @Test
     public void dispatcherNotNull()
     {
