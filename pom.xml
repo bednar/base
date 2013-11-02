@@ -16,6 +16,8 @@
         <version>1-SNAPSHOT</version>
     </parent>
 
+    <name>Base Library</name>
+
     <dependencies>
 
         <!-- Dependency Injection -->
