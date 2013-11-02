@@ -5,6 +5,9 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import com.google.common.base.Preconditions;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import org.reflections.Reflections;
 
 /**
@@ -14,13 +17,15 @@ import org.reflections.Reflections;
  */
 public final class FluentReflection
 {
+    private static LoadingCache<String, Reflections> cache = CacheBuilder.newBuilder().build(new Loader());
+
     private final Reflections reflections;
 
     private FluentReflection(@Nonnull final String pkcg)
     {
         Preconditions.checkNotNull(pkcg);
 
-        this.reflections = new Reflections(pkcg);
+        this.reflections = cache.getUnchecked(pkcg);
     }
 
     /**
@@ -65,5 +70,14 @@ public final class FluentReflection
         Preconditions.checkNotNull(pattern);
 
         return reflections.getResources(pattern);
+    }
+
+    private static class Loader extends CacheLoader<String, Reflections>
+    {
+        @Override
+        public Reflections load(final String key) throws Exception
+        {
+            return new Reflections(key);
+        }
     }
 }
