@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.github.bednar.base.http.AppBootstrap;
 import com.github.bednar.base.inject.Injector;
+import com.github.bednar.base.utils.reflection.FluentReflection;
 import com.google.common.collect.Sets;
 import org.reflections.Reflections;
 
@@ -49,8 +50,8 @@ public class Api extends Application
     @Nonnull
     private Set<Class<? extends ApiResource>> findResource()
     {
-        Reflections reflections = new Reflections(AppBootstrap.SYMBOL_BASE_PACKAGE);
-
-        return reflections.getSubTypesOf(ApiResource.class);
+        return FluentReflection
+                .forPackage(AppBootstrap.SYMBOL_BASE_PACKAGE)
+                .getSubTypesOf(ApiResource.class);
     }
 }

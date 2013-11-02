@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import com.github.bednar.base.utils.collection.ListAutoCloseable;
+import com.github.bednar.base.utils.reflection.FluentReflection;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.FluentIterable;
@@ -48,8 +49,9 @@ public final class FluentResource implements AutoCloseable
     @Nonnull
     public static ListAutoCloseable<FluentResource> byPattern(final @Nonnull Pattern pattern)
     {
-        Reflections reflections = new Reflections("", new ResourcesScanner());
-        Set<String> paths = reflections.getResources(pattern);
+        Set<String> paths = FluentReflection
+                .forBasePackage()
+                .getResources(pattern);
 
         //noinspection NullableProblems
         return FluentIterable.from(paths).transform(new Function<String, FluentResource>()

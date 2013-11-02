@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.github.bednar.base.http.AppBootstrap;
 import com.github.bednar.base.inject.Injector;
+import com.github.bednar.base.utils.reflection.FluentReflection;
 import com.mycila.event.Topic;
 import org.reflections.Reflections;
 
@@ -54,9 +55,9 @@ public class Dispatcher
     @Nonnull
     private Set<Class<? extends AbstractSubscriber>> findSubscribers()
     {
-        Reflections reflections = new Reflections(AppBootstrap.SYMBOL_BASE_PACKAGE);
-
-        return reflections.getSubTypesOf(AbstractSubscriber.class);
+        return FluentReflection
+                .forPackage(AppBootstrap.SYMBOL_BASE_PACKAGE)
+                .getSubTypesOf(AbstractSubscriber.class);
     }
 
     @Nonnull

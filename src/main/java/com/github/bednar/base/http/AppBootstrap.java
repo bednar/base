@@ -5,15 +5,16 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.util.List;
+import java.util.Set;
 
 import com.github.bednar.base.event.Dispatcher;
 import com.github.bednar.base.event.UpdateApplicationEvent;
 import com.github.bednar.base.inject.Injector;
+import com.github.bednar.base.utils.reflection.FluentReflection;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.grouplens.grapht.Module;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,8 +56,11 @@ public class AppBootstrap implements ServletContextListener
     {
         List<Module> modules = Lists.newArrayList();
 
-        Reflections reflections = new Reflections(SYMBOL_BASE_PACKAGE);
-        for (Class<? extends Module> moduleType : reflections.getSubTypesOf(Module.class))
+        Set<Class<? extends Module>> moduleTypes = FluentReflection
+                .forPackage(AppBootstrap.SYMBOL_BASE_PACKAGE)
+                .getSubTypesOf(Module.class);
+
+        for (Class<? extends Module> moduleType : moduleTypes)
         {
             try
             {
