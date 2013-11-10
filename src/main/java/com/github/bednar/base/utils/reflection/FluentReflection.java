@@ -1,13 +1,17 @@
 package com.github.bednar.base.utils.reflection;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.lang.reflect.Modifier;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Predicate;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.FluentIterable;
 import org.reflections.Reflections;
 
 /**
@@ -58,7 +62,15 @@ public final class FluentReflection
     {
         Preconditions.checkNotNull(type);
 
-        return reflections.getSubTypesOf(type);
+        return FluentIterable.from(reflections.getSubTypesOf(type))
+                .filter(new Predicate<Class<? extends T>>()
+                {
+                    @Override
+                    public boolean apply(@Nullable final Class<? extends T> type)
+                    {
+                        return type != null && !Modifier.isAbstract(type.getModifiers());
+                    }
+                }).toSet();
     }
 
     /**
