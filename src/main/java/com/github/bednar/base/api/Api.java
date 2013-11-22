@@ -23,20 +23,25 @@ public class Api extends Application
     {
         Injector injector = (Injector) servletContext.getAttribute(AppBootstrap.INJECTOR_KEY);
 
-        for (Class resourceType : findResource())
+        for (Class resourceType : findResources())
         {
             Object resource = injector.getInstance(resourceType);
 
             singletons.add(resource);
+        }
+
+        for (Class providerType : findProviders())
+        {
+            Object provider = injector.getInstance(providerType);
+
+            singletons.add(provider);
         }
     }
 
     @Override
     public Set<Class<?>> getClasses()
     {
-        return FluentReflection
-                .forPackage(AppBootstrap.SYMBOL_BASE_PACKAGE)
-                .getTypesAnnotatedWith(Provider.class);
+        return Sets.newHashSet();
     }
 
     @Override
@@ -46,10 +51,18 @@ public class Api extends Application
     }
 
     @Nonnull
-    private Set<Class<? extends ApiResource>> findResource()
+    private Set<Class<? extends ApiResource>> findResources()
     {
         return FluentReflection
                 .forPackage(AppBootstrap.SYMBOL_BASE_PACKAGE)
                 .getSubTypesOf(ApiResource.class);
+    }
+
+    @Nonnull
+    private Set<Class<?>> findProviders()
+    {
+        return FluentReflection
+                .forPackage(AppBootstrap.SYMBOL_BASE_PACKAGE)
+                .getTypesAnnotatedWith(Provider.class);
     }
 }
