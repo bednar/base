@@ -2,6 +2,7 @@ package com.github.bednar.base.utils.reflection;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -71,6 +72,17 @@ public final class FluentReflection
                         return type != null && !Modifier.isAbstract(type.getModifiers());
                     }
                 }).toSet();
+    }
+
+    /**
+     * @see Reflections#getTypesAnnotatedWith(java.lang.annotation.Annotation)
+     */
+    @Nonnull
+    public Set<Class<?>> getTypesAnnotatedWith(@Nonnull final Class<? extends Annotation> annotation)
+    {
+        Preconditions.checkNotNull(annotation);
+
+        return reflections.getTypesAnnotatedWith(annotation);
     }
 
     /**
