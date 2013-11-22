@@ -7,6 +7,8 @@ install: ''
 
 script: 'mvn clean install deploy --settings src/main/config/travis-maven-settings.xml -U'
 
+after_success: 'mvn clean cobertura:cobertura coveralls:cobertura'
+
 env:
   global:
   - secure: F4on4UmEMUjRycmC2F93YexCll7CFTywlSVWf5NUiS3WtjJl1sWbjd44of9D81+NvGV21UwRLEpNEYRWFK/PimNPQdPeuEq30nFbLnUgIpR0nCdQGMgMhmFPTxQqxKHVhutZ9qh4pBkubhaGAAumUlR0nRqb1ut+A81AliYTeT4=
