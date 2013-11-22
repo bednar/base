@@ -4,13 +4,13 @@ import javax.annotation.Nonnull;
 import javax.servlet.ServletContext;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.ext.Provider;
 import java.util.Set;
 
 import com.github.bednar.base.http.AppBootstrap;
 import com.github.bednar.base.inject.Injector;
 import com.github.bednar.base.utils.reflection.FluentReflection;
 import com.google.common.collect.Sets;
-import org.reflections.Reflections;
 
 /**
  * @author Jakub Bednář (24/08/2013 1:02 PM)
@@ -34,11 +34,9 @@ public class Api extends Application
     @Override
     public Set<Class<?>> getClasses()
     {
-        Set<Class<?>> providers = Sets.newHashSet();
-
-        providers.add(ApiExceptionMapper.class);
-
-        return providers;
+        return FluentReflection
+                .forPackage(AppBootstrap.SYMBOL_BASE_PACKAGE)
+                .getTypesAnnotatedWith(Provider.class);
     }
 
     @Override
