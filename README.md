@@ -1,6 +1,6 @@
 Base Library
 ====
-[![Build Status](https://api.travis-ci.org/bednar/base.png?branch=master)](https://travis-ci.org/bednar/base)[![Coverage Status](https://coveralls.io/repos/bednar/base/badge.png)](https://coveralls.io/r/bednar/base)
+[![Build Status](https://api.travis-ci.org/bednar/base.png?branch=master)](https://travis-ci.org/bednar/base) [![Coverage Status](https://coveralls.io/repos/bednar/base/badge.png)](https://coveralls.io/r/bednar/base)
 
 ## Maven Repository
 
