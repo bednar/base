@@ -10,7 +10,7 @@ import org.junit.BeforeClass;
  */
 public abstract class AbstractBaseTest
 {
-    private static EmbeddedJetty embeddedJetty;
+    protected static EmbeddedJetty embeddedJetty;
 
     @BeforeClass
     public static void beforeClass() throws Exception
