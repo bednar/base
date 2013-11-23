@@ -17,7 +17,8 @@ import com.wordnik.swagger.annotations.ApiResponse;
 @Produces("application/json")
 @com.wordnik.swagger.annotations.Api(
         value = "Testing \"Resource\"",
-        description = "Demonstration response of remote API.")
+        description = "Demonstration response of remote API.",
+        position = 0)
 public class ApiDemonstration implements ApiResource
 {
     @GET
