@@ -11,10 +11,10 @@ import org.junit.Test;
 /**
  * @author Jakub Bednář (24/08/2013 11:08 AM)
  */
-public class ApiInitializationTest extends AbstractBaseTest
+public class ApiDemonstrationTest extends AbstractBaseTest
 {
     @Test
-    public void demonstrationOk() throws ExecutionException, InterruptedException
+    public void ok() throws ExecutionException, InterruptedException
     {
         int status = request("200");
 
@@ -22,7 +22,7 @@ public class ApiInitializationTest extends AbstractBaseTest
     }
 
     @Test
-    public void demonstrationError() throws ExecutionException, InterruptedException
+    public void error() throws ExecutionException, InterruptedException
     {
         int status = request("500");
 
@@ -30,7 +30,7 @@ public class ApiInitializationTest extends AbstractBaseTest
     }
 
     @Test
-    public void demonstrationUnAuthorized() throws ExecutionException, InterruptedException
+    public void unAuthorized() throws ExecutionException, InterruptedException
     {
         int status = request("401");
 
@@ -41,7 +41,7 @@ public class ApiInitializationTest extends AbstractBaseTest
     private Integer request(final @Nonnull String relativePath) throws ExecutionException, InterruptedException
     {
         return ClientBuilder.newClient()
-                .target("http://localhost:8090/api/test/" + relativePath)
+                .target(embeddedJetty.getURL() + "/api/test/" + relativePath)
                 .request("application/json")
                 .buildGet()
                 .submit()
