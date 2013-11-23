@@ -1,5 +1,6 @@
 package com.github.bednar.base.api;
 
+import javax.annotation.Nonnull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -24,36 +25,57 @@ public class ApiDemonstration implements ApiResource
     @GET
     @Path("200")
     @ApiOperation(position = 1, value = "Success Response")
-    @ApiResponse(code = 200, message = "{\"status\" : 200}")
+    @ApiResponse(code = 200, message = "{\"status\":200}")
     public Response ok()
     {
-        return Response.ok("{\"status\" : 200}").build();
+        return Response
+                .ok(new ResponseStatus(200))
+                .build();
     }
 
     @GET
     @Path("401")
     @ApiOperation(position = 2, value = "Unauthorized")
-    @ApiResponse(code = 401, message = "{\"status\" : 401}")
+    @ApiResponse(code = 401, message = "{\"status\":401}")
     public Response unAuthorized()
     {
-        return Response.status(Response.Status.UNAUTHORIZED).entity("{\"status\" : 401}").build();
+        return Response
+                .status(Response.Status.UNAUTHORIZED)
+                .entity(new ResponseStatus(401))
+                .build();
     }
 
     @GET
     @Path("403")
     @ApiOperation(position = 3, value = "Forbidden")
-    @ApiResponse(code = 403, message = "{\"status\" : 403}")
+    @ApiResponse(code = 403, message = "{\"status\":403}")
     public Response forbidden()
     {
-        return Response.status(Response.Status.FORBIDDEN).entity("{\"status\" : 403}").build();
+        return Response
+                .status(Response.Status.FORBIDDEN)
+                .entity(new ResponseStatus(403))
+                .build();
     }
 
     @GET
     @Path("500")
     @ApiOperation(position = 4, value = "Server Error")
-    @ApiResponse(code = 500, message = "{\"status\" : 500}")
+    @ApiResponse(code = 500, message = "{\"status\":500}")
     public Response error()
     {
-        return Response.serverError().entity("{\"status\" : 500}").build();
+        return Response
+                .serverError()
+                .entity(new ResponseStatus(500))
+                .build();
+    }
+
+    private class ResponseStatus
+    {
+        public final Integer status;
+
+        private ResponseStatus(@Nonnull final Integer status)
+        {
+            this.status = status;
+        }
     }
 }

@@ -20,7 +20,7 @@ public class ApiDemonstrationTest extends AbstractBaseTest
         Response response = request("200");
 
         Assert.assertEquals(200, response.getStatus());
-        Assert.assertEquals("{\"status\" : 200}", response.readEntity(String.class));
+        Assert.assertEquals("{\"status\":200}", response.readEntity(String.class));
     }
 
     @Test
@@ -29,7 +29,7 @@ public class ApiDemonstrationTest extends AbstractBaseTest
         Response response = request("401");
 
         Assert.assertEquals(401, response.getStatus());
-        Assert.assertEquals("{\"status\" : 401}", response.readEntity(String.class));
+        Assert.assertEquals("{\"status\":401}", response.readEntity(String.class));
     }
 
     @Test
@@ -38,7 +38,7 @@ public class ApiDemonstrationTest extends AbstractBaseTest
         Response response = request("403");
 
         Assert.assertEquals(403, response.getStatus());
-        Assert.assertEquals("{\"status\" : 403}", response.readEntity(String.class));
+        Assert.assertEquals("{\"status\":403}", response.readEntity(String.class));
     }
 
     @Test
@@ -47,7 +47,7 @@ public class ApiDemonstrationTest extends AbstractBaseTest
         Response response = request("500");
 
         Assert.assertEquals(500, response.getStatus());
-        Assert.assertEquals("{\"status\" : 500}", response.readEntity(String.class));
+        Assert.assertEquals("{\"status\":500}", response.readEntity(String.class));
     }
 
     @Nonnull
