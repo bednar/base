@@ -14,6 +14,9 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.FluentIterable;
 import org.reflections.Reflections;
+import org.reflections.scanners.ResourcesScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 
 /**
  * Java Reflection Utils
@@ -52,7 +55,7 @@ public final class FluentReflection
     @Nonnull
     public static FluentReflection forBasePackage()
     {
-        return new FluentReflection("");
+        return new FluentReflection("*");
     }
 
     /**
@@ -99,9 +102,24 @@ public final class FluentReflection
     private static class Loader extends CacheLoader<String, Reflections>
     {
         @Override
-        public Reflections load(final String key) throws Exception
+        public Reflections load(@Nonnull final String key) throws Exception
         {
-            return new Reflections(key);
+            ConfigurationBuilder configuration;
+
+            //search on whole classpath
+            if ("*".equals(key))
+            {
+                configuration = new ConfigurationBuilder()
+                        .setUrls(ClasspathHelper.forJavaClassPath());
+            }
+            else
+            {
+                configuration = ConfigurationBuilder.build(key);
+            }
+
+            configuration.addScanners(new ResourcesScanner());
+
+            return new Reflections(configuration);
         }
     }
 }
