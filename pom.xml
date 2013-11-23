@@ -28,6 +28,7 @@
         </dependency>
 
         <!-- Database -->
+
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
@@ -51,6 +52,11 @@
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jaxrs</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.wordnik</groupId>
+            <artifactId>swagger-annotations_2.9.1</artifactId>
         </dependency>
 
         <dependency>
