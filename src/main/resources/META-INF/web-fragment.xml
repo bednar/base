@@ -16,7 +16,7 @@
             <param-name>resteasy.servlet.mapping.prefix</param-name>
             <param-value>api</param-value>
         </init-param>
-        <load-on-startup/>
+        <load-on-startup>10</load-on-startup>
     </servlet>
 
     <servlet>
