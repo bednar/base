@@ -58,7 +58,7 @@ public class Injector
 
     private <T> void initializeInstance(final @Nonnull T instance)
     {
-        LOG.info("Injector.initializeInstance[{}][start]", instance.getClass());
+        LOG.info("[{}][start]", instance.getClass());
 
         //Inject fields
         Set<Field> fields = Reflections.getAllFields(instance.getClass(), new Predicate<Field>()
@@ -106,6 +106,6 @@ public class Injector
             }
         }
 
-        LOG.info("Injector.initializeInstance[{}][done]", instance.getClass());
+        LOG.info("[{}][done]", instance.getClass());
     }
 }
