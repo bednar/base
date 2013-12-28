@@ -17,7 +17,7 @@ import com.google.common.collect.Sets;
  */
 public class Api extends Application
 {
-    private static Set<Object> singletons = Sets.newHashSet();
+    private Set<Object> singletons = Sets.newHashSet();
 
     public Api(final @Context ServletContext servletContext)
     {
