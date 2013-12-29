@@ -23,6 +23,8 @@ public abstract class AbstractException extends java.lang.RuntimeException
 
     protected AbstractException(@Nullable final String uiMessage, @Nullable final Type type, @Nullable final Throwable reason)
     {
+        super(reason);
+
         this.uiMessage = uiMessage;
         this.type = type;
 

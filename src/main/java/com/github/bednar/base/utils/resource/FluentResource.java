@@ -3,15 +3,19 @@ package com.github.bednar.base.utils.resource;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.URL;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 import com.github.bednar.base.utils.collection.ListAutoCloseable;
 import com.github.bednar.base.utils.reflection.FluentReflection;
+import com.github.bednar.base.utils.throwable.FluentException;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.FluentIterable;
@@ -26,12 +30,19 @@ public final class FluentResource implements AutoCloseable
 
     private InputStream stream;
 
-    private FluentResource(final @Nonnull String path)
+    private FluentResource(@Nonnull final String path)
     {
         this.path = path;
     }
 
-    public static FluentResource byPath(final @Nonnull String path)
+    private FluentResource(@Nonnull final String path, @Nullable final InputStream stream)
+    {
+        this.path   = path;
+        this.stream = stream;
+    }
+
+    @Nonnull
+    public static FluentResource byPath(@Nonnull final String path)
     {
         Preconditions.checkNotNull(path);
 
@@ -41,13 +52,21 @@ public final class FluentResource implements AutoCloseable
     }
 
     @Nonnull
-    public static ListAutoCloseable<FluentResource> byPattern(final @Nonnull String pattern)
+    public static FluentResource byURL(@Nonnull final URL url)
+    {
+        Preconditions.checkNotNull(url);
+
+        return new FluentResource(url.toExternalForm());
+    }
+
+    @Nonnull
+    public static ListAutoCloseable<FluentResource> byPattern(@Nonnull final String pattern)
     {
         return byPattern(Pattern.compile(pattern));
     }
 
     @Nonnull
-    public static ListAutoCloseable<FluentResource> byPattern(final @Nonnull Pattern pattern)
+    public static ListAutoCloseable<FluentResource> byPattern(@Nonnull final Pattern pattern)
     {
         Set<String> paths = FluentReflection
                 .forBasePackage()
@@ -58,7 +77,7 @@ public final class FluentResource implements AutoCloseable
         {
             @Nullable
             @Override
-            public FluentResource apply(final @Nonnull String path)
+            public FluentResource apply(@Nonnull final String path)
             {
                 return FluentResource.byPath(path);
             }
@@ -70,7 +89,21 @@ public final class FluentResource implements AutoCloseable
     {
         if (stream == null)
         {
-            stream = this.getClass().getResourceAsStream(path);
+            if (path.startsWith("file:"))
+            {
+                try
+                {
+                    stream = new FileInputStream(path.replaceFirst("file:", ""));
+                }
+                catch (FileNotFoundException e)
+                {
+                    throw FluentException.internal(e);
+                }
+            }
+            else
+            {
+                stream = this.getClass().getResourceAsStream(path);
+            }
         }
 
         return stream;
@@ -85,7 +118,7 @@ public final class FluentResource implements AutoCloseable
         }
         catch (IOException e)
         {
-            throw new FluentResourceException(e);
+            throw FluentException.internal(e);
         }
     }
 
@@ -111,16 +144,8 @@ public final class FluentResource implements AutoCloseable
             }
             catch (IOException e)
             {
-                throw new FluentResourceException(e);
+                throw FluentException.internal(e);
             }
-        }
-    }
-
-    public static class FluentResourceException extends RuntimeException
-    {
-        public FluentResourceException(final @Nonnull Throwable cause)
-        {
-            super(cause);
         }
     }
 }

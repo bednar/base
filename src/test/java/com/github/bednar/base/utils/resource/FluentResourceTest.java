@@ -2,6 +2,7 @@ package com.github.bednar.base.utils.resource;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
@@ -40,5 +41,16 @@ public class FluentResourceTest
         Reader reader = resource.asReader();
 
         Assert.assertEquals("Testing Resource Content", IOUtils.toString(reader));
+    }
+
+    @Test
+    public void byURL()
+    {
+        URL url = this.getClass().getResource("/resource.txt");
+
+        try (FluentResource fluentResource = FluentResource.byURL(url))
+        {
+            Assert.assertEquals(resource.asString(), fluentResource.asString());
+        }
     }
 }
