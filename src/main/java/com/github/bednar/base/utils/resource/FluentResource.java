@@ -5,6 +5,8 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -14,8 +16,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.FluentIterable;
 import org.apache.commons.io.IOUtils;
-import org.reflections.Reflections;
-import org.reflections.scanners.ResourcesScanner;
 
 /**
  * @author Jakub Bednář (19/09/2013 5:40 PM)
@@ -77,12 +77,6 @@ public final class FluentResource implements AutoCloseable
     }
 
     @Nonnull
-    public String path()
-    {
-        return path;
-    }
-
-    @Nonnull
     public String asString()
     {
         try
@@ -93,6 +87,18 @@ public final class FluentResource implements AutoCloseable
         {
             throw new FluentResourceException(e);
         }
+    }
+
+    @Nonnull
+    public Reader asReader()
+    {
+        return new InputStreamReader(asStream());
+    }
+
+    @Nonnull
+    public String path()
+    {
+        return path;
     }
 
     public void close()
