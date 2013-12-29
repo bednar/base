@@ -35,12 +35,6 @@ public final class FluentResource implements AutoCloseable
         this.path = path;
     }
 
-    private FluentResource(@Nonnull final String path, @Nullable final InputStream stream)
-    {
-        this.path   = path;
-        this.stream = stream;
-    }
-
     @Nonnull
     public static FluentResource byPath(@Nonnull final String path)
     {
