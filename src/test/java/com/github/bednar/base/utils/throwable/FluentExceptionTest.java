@@ -7,12 +7,12 @@ import org.junit.Test;
  * @author Jakub Bednář (29/12/2013 14:31)
  */
 @SuppressWarnings({"ThrowableResultOfMethodCallIgnored", "ThrowableInstanceNeverThrown"})
-public class RuntimeExceptionTest
+public class FluentExceptionTest
 {
     @Test
     public void internalTypeValue()
     {
-        RuntimeException internal = RuntimeException.internal();
+        FluentException internal = FluentException.internal();
 
         Assert.assertEquals(AbstractException.Type.INTERNAL, internal.getType());
     }
@@ -20,7 +20,7 @@ public class RuntimeExceptionTest
     @Test
     public void internalUiMessageValue()
     {
-        RuntimeException internal = RuntimeException.internal("bye bye!");
+        FluentException internal = FluentException.internal("bye bye!");
 
         Assert.assertEquals("bye bye!", internal.getUiMessage());
     }
@@ -30,7 +30,7 @@ public class RuntimeExceptionTest
     {
         NullPointerException reason = new NullPointerException();
 
-        RuntimeException internal = RuntimeException.internal(reason);
+        FluentException internal = FluentException.internal(reason);
 
         Assert.assertEquals(reason, internal.getReason());
     }
@@ -38,7 +38,7 @@ public class RuntimeExceptionTest
     @Test
     public void defaultInternalUiMessageNotNull()
     {
-        RuntimeException internal = RuntimeException.internal();
+        FluentException internal = FluentException.internal();
 
         Assert.assertEquals("", internal.getUiMessage());
     }
@@ -46,7 +46,7 @@ public class RuntimeExceptionTest
     @Test
     public void defaultInternalReasonNull()
     {
-        RuntimeException internal = RuntimeException.internal();
+        FluentException internal = FluentException.internal();
 
         Assert.assertNull(internal.getReason());
     }
