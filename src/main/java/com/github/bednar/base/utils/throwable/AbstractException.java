@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 /**
  * @author Jakub Bednář (29/12/2013 14:24)
  */
-public abstract class AbstractException extends Throwable
+public abstract class AbstractException extends java.lang.RuntimeException
 {
     private final String uiMessage;
     private final Type type;
