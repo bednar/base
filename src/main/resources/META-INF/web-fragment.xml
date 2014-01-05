@@ -43,7 +43,7 @@
 
     <filter-mapping>
         <filter-name>AppContext</filter-name>
-        <url-pattern>/api/*</url-pattern>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
 
     <listener>
