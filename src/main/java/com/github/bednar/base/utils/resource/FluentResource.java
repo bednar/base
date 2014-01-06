@@ -3,8 +3,6 @@ package com.github.bednar.base.utils.resource;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -20,19 +18,28 @@ import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.FluentIterable;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Jakub Bednář (19/09/2013 5:40 PM)
  */
 public final class FluentResource implements AutoCloseable
 {
-    private final String path;
+    private static final Logger LOG = LoggerFactory.getLogger(FluentResource.class);
+
+    private final URL url;
 
     private InputStream stream;
 
+    private FluentResource(@Nullable final URL url)
+    {
+        this.url = url;
+    }
+
     private FluentResource(@Nonnull final String path)
     {
-        this.path = path;
+        this.url = this.getClass().getResource(path);
     }
 
     @Nonnull
@@ -50,7 +57,7 @@ public final class FluentResource implements AutoCloseable
     {
         Preconditions.checkNotNull(url);
 
-        return new FluentResource(url.toExternalForm());
+        return new FluentResource(url);
     }
 
     @Nonnull
@@ -81,26 +88,28 @@ public final class FluentResource implements AutoCloseable
     @Nullable
     public InputStream asStream()
     {
-        if (stream == null)
+        if (url != null && stream == null)
         {
-            if (path.startsWith("file:"))
+            try
             {
-                try
-                {
-                    stream = new FileInputStream(path.replaceFirst("file:", ""));
-                }
-                catch (FileNotFoundException e)
-                {
-                    throw FluentException.internal(e);
-                }
+                stream = url.openStream();
             }
-            else
+            catch (IOException e)
             {
-                stream = this.getClass().getResourceAsStream(path);
+                LOG.error("[cannot-open-stream]", e);
+
+                return null;
             }
         }
 
         return stream;
+    }
+
+
+    @Nonnull
+    public Boolean exists()
+    {
+        return asStream() != null;
     }
 
     @Nonnull
@@ -125,7 +134,7 @@ public final class FluentResource implements AutoCloseable
     @Nonnull
     public String path()
     {
-        return path;
+        return url != null ? url.toExternalForm() : "";
     }
 
     public void close()

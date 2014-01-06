@@ -1,13 +1,10 @@
 package com.github.bednar.base.utils.resource;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -15,32 +12,22 @@ import org.junit.Test;
  */
 public class FluentResourceTest
 {
-    private FluentResource resource;
-
-    @Before
-    public void before()
-    {
-        resource = FluentResource.byPath("/resource.txt");
-    }
-
-    @After
-    public void after()
-    {
-        resource.close();
-    }
-
     @Test
     public void asString()
     {
-        Assert.assertEquals("Testing Resource Content", resource.asString());
+        try (FluentResource resource = FluentResource.byPath("/resource.txt"))
+        {
+            Assert.assertEquals("Testing Resource Content", resource.asString());
+        }
     }
 
     @Test
     public void asReader() throws IOException
     {
-        Reader reader = resource.asReader();
-
-        Assert.assertEquals("Testing Resource Content", IOUtils.toString(reader));
+        try (FluentResource resource = FluentResource.byPath("/resource.txt"))
+        {
+            Assert.assertEquals("Testing Resource Content", IOUtils.toString(resource.asReader()));
+        }
     }
 
     @Test
@@ -48,9 +35,46 @@ public class FluentResourceTest
     {
         URL url = this.getClass().getResource("/resource.txt");
 
-        try (FluentResource fluentResource = FluentResource.byURL(url))
+        try (FluentResource resource = FluentResource.byURL(url))
         {
-            Assert.assertEquals(resource.asString(), fluentResource.asString());
+            Assert.assertEquals("Testing Resource Content", resource.asString());
+        }
+    }
+
+    @Test
+    public void exist()
+    {
+        try (FluentResource resource = FluentResource.byPath("/resource.txt"))
+        {
+            Assert.assertTrue(resource.exists());
+        }
+    }
+
+    @Test
+    public void notExist()
+    {
+        try (FluentResource resource = FluentResource.byPath("/notexist/resource.txt"))
+        {
+            Assert.assertFalse(resource.exists());
+        }
+    }
+
+    @Test
+    public void pathForExist()
+    {
+        try (FluentResource resource = FluentResource.byPath("/resource.txt"))
+        {
+            Assert.assertTrue(resource.path().startsWith("file:"));
+            Assert.assertTrue(resource.path().endsWith("target/test-classes/resource.txt"));
+        }
+    }
+
+    @Test
+    public void pathForNotExist()
+    {
+        try (FluentResource resource = FluentResource.byPath("/notexist/resource.txt"))
+        {
+            Assert.assertEquals("", resource.path());
         }
     }
 }
