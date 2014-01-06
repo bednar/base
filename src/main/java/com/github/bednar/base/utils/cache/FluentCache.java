@@ -24,7 +24,17 @@ public final class FluentCache
     }
 
     @Nonnull
-    public static <K, V> Cache<K, V> cache(@Nonnull final String name, @Nonnull Class<K> keyType, @Nonnull Class<V> valueType)
+    public static <K, V> Cache<K, V> cacheByClass(@Nonnull final Class forType,
+                                                  @Nonnull Class<K> keyType,
+                                                  @Nonnull Class<V> valueType)
+    {
+        return cacheByName(forType.getName(), keyType, valueType);
+    }
+
+    @Nonnull
+    public static <K, V> Cache<K, V> cacheByName(@Nonnull final String name,
+                                                 @Nonnull Class<K> keyType,
+                                                 @Nonnull Class<V> valueType)
     {
         Cache<K, V> cache = manager().getCache(name, keyType, valueType);
         if (cache != null)
@@ -36,7 +46,9 @@ public final class FluentCache
     }
 
     @Nonnull
-    private synchronized static <K, V> Cache<K, V> createCache(@Nonnull final String name, @Nonnull Class<K> keyType, @Nonnull Class<V> valueType)
+    private synchronized static <K, V> Cache<K, V> createCache(@Nonnull final String name,
+                                                               @Nonnull Class<K> keyType,
+                                                               @Nonnull Class<V> valueType)
     {
         Cache<K, V> cache = manager().getCache(name);
         if (cache != null)
