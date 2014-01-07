@@ -137,6 +137,7 @@ public final class FluentResource implements AutoCloseable
         return url != null ? url.toExternalForm() : "";
     }
 
+    @Override
     public void close()
     {
         if (stream != null)
@@ -150,5 +151,11 @@ public final class FluentResource implements AutoCloseable
                 throw FluentException.internal(e);
             }
         }
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format("[%s][path=%s]", this.getClass(), path());
     }
 }

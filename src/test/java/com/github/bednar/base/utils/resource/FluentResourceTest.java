@@ -77,4 +77,14 @@ public class FluentResourceTest
             Assert.assertEquals("", resource.path());
         }
     }
+
+    @Test
+    public void toStringValue()
+    {
+        try (FluentResource resource = FluentResource.byPath("/resource.txt"))
+        {
+            Assert.assertTrue(resource.toString().startsWith("[class com.github.bednar.base.utils.resource.FluentResource][path=file:/"));
+            Assert.assertTrue(resource.toString().endsWith("/target/test-classes/resource.txt]"));
+        }
+    }
 }
