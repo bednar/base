@@ -32,6 +32,9 @@ public final class FluentResource implements AutoCloseable
     private static final Pattern DIRECTORY_PATTERN = Pattern
             .compile(String.format("^(.*)%s(.*)$", File.separatorChar));
 
+    private static final Pattern PROTOCOL_PATTERN = Pattern
+            .compile("^([a-zA-Z]+:)(.*)$");
+
     private final URL url;
 
     private InputStream stream;
@@ -43,7 +46,9 @@ public final class FluentResource implements AutoCloseable
 
     private FluentResource(@Nonnull final String path)
     {
-        this.url = this.getClass().getResource(path);
+        String resource = path.startsWith(File.separator) ? path : File.separator + path;
+
+        this.url = this.getClass().getResource(resource);
     }
 
     @Nonnull
@@ -51,9 +56,20 @@ public final class FluentResource implements AutoCloseable
     {
         Preconditions.checkNotNull(path);
 
-        String resourcePath = path.startsWith(File.separator) ? path : File.separator + path;
+        //start with protocol 'protocol:path/next' ? => use URL
+        if (PROTOCOL_PATTERN.matcher(path).matches())
+        {
+            try
+            {
+                return byURL(new URL(path));
+            }
+            catch (MalformedURLException e)
+            {
+                throw FluentException.internal(e);
+            }
+        }
 
-        return new FluentResource(resourcePath);
+        return new FluentResource(path);
     }
 
     @Nonnull
@@ -62,24 +78,6 @@ public final class FluentResource implements AutoCloseable
         Preconditions.checkNotNull(url);
 
         return new FluentResource(url);
-    }
-
-    /**
-     * Load by {@link java.net.URL} external form.
-     *
-     * @see java.net.URL#toExternalForm()
-     */
-    @Nonnull
-    public static FluentResource byURL(@Nonnull final String url)
-    {
-        try
-        {
-            return byURL(new URL(url));
-        }
-        catch (MalformedURLException e)
-        {
-            throw FluentException.internal(e);
-        }
     }
 
     @Nonnull

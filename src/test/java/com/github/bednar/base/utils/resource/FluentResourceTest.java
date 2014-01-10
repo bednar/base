@@ -125,15 +125,15 @@ public class FluentResourceTest
 
         path += CheckForSigned.class.getSimpleName() + ".class";
 
-        try (FluentResource resource = FluentResource.byURL(path))
+        try (FluentResource resource = FluentResource.byPath(path))
         {
             Assert.assertTrue(resource.exists());
         }
     }
 
     @Test(expected = FluentException.class)
-    public void loadByURLExternalFormMellformed()
+    public void loadByURLExternalFormNotSupportedProcol()
     {
-        FluentResource.byURL("/resource.txt");
+        FluentResource.byPath("beer:zubr");
     }
 }
