@@ -1,5 +1,6 @@
 package com.github.bednar.base.utils.resource;
 
+import javax.annotation.CheckForNull;
 import java.io.IOException;
 import java.net.URL;
 
@@ -85,6 +86,28 @@ public class FluentResourceTest
         {
             Assert.assertTrue(resource.toString().startsWith("[class com.github.bednar.base.utils.resource.FluentResource][path=file:/"));
             Assert.assertTrue(resource.toString().endsWith("/target/test-classes/resource.txt]"));
+        }
+    }
+
+    @Test
+    public void directory()
+    {
+        try (FluentResource resource = FluentResource.byPath("/resource.txt"))
+        {
+            Assert.assertTrue(resource.directory().startsWith("file:"));
+            Assert.assertTrue(resource.directory().endsWith("/target/test-classes/"));
+        }
+    }
+
+    @Test
+    public void directoryFromJar()
+    {
+        String path = CheckForNull.class.getName().replaceAll("\\.", "/") + ".class";
+
+        try (FluentResource resource = FluentResource.byPath(path))
+        {
+            Assert.assertTrue(resource.directory().startsWith("jar:file:"));
+            Assert.assertTrue(resource.directory().endsWith("!/javax/annotation/"));
         }
     }
 }

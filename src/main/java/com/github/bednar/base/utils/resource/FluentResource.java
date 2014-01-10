@@ -28,6 +28,9 @@ public final class FluentResource implements AutoCloseable
 {
     private static final Logger LOG = LoggerFactory.getLogger(FluentResource.class);
 
+    private static final Pattern DIRECTORY_PATTERN = Pattern
+            .compile(String.format("^(.*)%s(.*)$", File.separatorChar));
+
     private final URL url;
 
     private InputStream stream;
@@ -135,6 +138,14 @@ public final class FluentResource implements AutoCloseable
     public String path()
     {
         return url != null ? url.toExternalForm() : "";
+    }
+
+    @Nonnull
+    public String directory()
+    {
+        String path = path();
+
+        return DIRECTORY_PATTERN.matcher(path).replaceAll("$1") + File.separatorChar;
     }
 
     @Override
