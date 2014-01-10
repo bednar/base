@@ -1,9 +1,11 @@
 package com.github.bednar.base.utils.resource;
 
 import javax.annotation.CheckForNull;
+import javax.annotation.CheckForSigned;
 import java.io.IOException;
 import java.net.URL;
 
+import com.github.bednar.base.utils.throwable.FluentException;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -109,5 +111,29 @@ public class FluentResourceTest
             Assert.assertTrue(resource.directory().startsWith("jar:file:"));
             Assert.assertTrue(resource.directory().endsWith("!/javax/annotation/"));
         }
+    }
+
+    @Test
+    public void loadByURLExternalForm()
+    {
+        String path = CheckForNull.class.getName().replaceAll("\\.", "/") + ".class";
+
+        try (FluentResource resource = FluentResource.byPath(path))
+        {
+            path = resource.directory();
+        }
+
+        path += CheckForSigned.class.getSimpleName() + ".class";
+
+        try (FluentResource resource = FluentResource.byURL(path))
+        {
+            Assert.assertTrue(resource.exists());
+        }
+    }
+
+    @Test(expected = FluentException.class)
+    public void loadByURLExternalFormMellformed()
+    {
+        FluentResource.byURL("/resource.txt");
     }
 }

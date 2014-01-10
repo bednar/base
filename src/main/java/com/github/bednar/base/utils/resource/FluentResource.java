@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -61,6 +62,24 @@ public final class FluentResource implements AutoCloseable
         Preconditions.checkNotNull(url);
 
         return new FluentResource(url);
+    }
+
+    /**
+     * Load by {@link java.net.URL} external form.
+     *
+     * @see java.net.URL#toExternalForm()
+     */
+    @Nonnull
+    public static FluentResource byURL(@Nonnull final String url)
+    {
+        try
+        {
+            return byURL(new URL(url));
+        }
+        catch (MalformedURLException e)
+        {
+            throw FluentException.internal(e);
+        }
     }
 
     @Nonnull
