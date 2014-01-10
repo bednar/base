@@ -68,8 +68,10 @@ public final class FluentResource implements AutoCloseable
                 throw FluentException.internal(e);
             }
         }
-
-        return new FluentResource(path);
+        else
+        {
+            return new FluentResource(path);
+        }
     }
 
     @Nonnull
