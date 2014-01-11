@@ -5,6 +5,7 @@ import javax.annotation.CheckForSigned;
 import java.io.IOException;
 import java.net.URL;
 
+import com.github.bednar.base.utils.collection.ListAutoCloseable;
 import com.github.bednar.base.utils.throwable.FluentException;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
@@ -135,5 +136,17 @@ public class FluentResourceTest
     public void loadByURLExternalFormNotSupportedProcol()
     {
         FluentResource.byPath("beer:zubr");
+    }
+
+    @Test
+    public void byPatternFromPackage()
+    {
+        String pkcg     = "com.github.bednar.base.utils";
+        String pattern  = "/resource/.*\\.txt";
+
+        try (ListAutoCloseable<FluentResource> fluentResources = FluentResource.byPattern(pkcg, pattern))
+        {
+            Assert.assertEquals(3, fluentResources.size());
+        }
     }
 }

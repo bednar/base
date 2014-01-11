@@ -13,6 +13,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.reflections.util.ClasspathHelper;
@@ -27,13 +29,17 @@ public final class FluentReflection
 {
     private static LoadingCache<String, Reflections> cache = CacheBuilder.newBuilder().build(new Loader());
 
+    private final String pckg;
+    private final String pckgPath;
     private final Reflections reflections;
 
     private FluentReflection(@Nonnull final String pkcg)
     {
         Preconditions.checkNotNull(pkcg);
 
-        this.reflections = cache.getUnchecked(pkcg);
+        this.pckg           = pkcg;
+        this.pckgPath       = pckg.replaceAll("\\.", "/");
+        this.reflections    = cache.getUnchecked(pkcg);
     }
 
     /**
@@ -96,7 +102,33 @@ public final class FluentReflection
     {
         Preconditions.checkNotNull(pattern);
 
-        return reflections.getResources(pattern);
+        Multimap<String,String> resources = reflections.getStore().get(ResourcesScanner.class);
+        if (resources == null)
+        {
+            return Sets.newHashSet();
+        }
+
+        return FluentIterable.from(resources.values()).filter(new Predicate<String>()
+        {
+            @Override
+            public boolean apply(@Nullable final String path)
+            {
+                String resourcePath = path;
+
+                if (resourcePath == null)
+                {
+                    return false;
+                }
+
+                //remove package prefix
+                if (resourcePath.startsWith(pckgPath))
+                {
+                    resourcePath = resourcePath.replace(pckgPath, "");
+                }
+
+                return pattern.matcher(resourcePath).matches();
+            }
+        }).toSet();
     }
 
     private static class Loader extends CacheLoader<String, Reflections>

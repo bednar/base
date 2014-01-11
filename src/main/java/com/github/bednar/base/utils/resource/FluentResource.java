@@ -89,11 +89,29 @@ public final class FluentResource implements AutoCloseable
     }
 
     @Nonnull
+    public static ListAutoCloseable<FluentResource> byPattern(@Nonnull final String pkcg, @Nonnull final String pattern)
+    {
+        return byPattern(FluentReflection.forPackage(pkcg), Pattern.compile(pattern));
+    }
+
+
+    @Nonnull
     public static ListAutoCloseable<FluentResource> byPattern(@Nonnull final Pattern pattern)
     {
-        Set<String> paths = FluentReflection
-                .forBasePackage()
-                .getResources(pattern);
+        return byPattern(FluentReflection.forBasePackage(), pattern);
+    }
+
+    @Nonnull
+    public static ListAutoCloseable<FluentResource> byPattern(@Nonnull final String pkcg, @Nonnull final Pattern pattern)
+    {
+        return byPattern(FluentReflection.forPackage(pkcg), pattern);
+    }
+
+    @Nonnull
+    public static ListAutoCloseable<FluentResource> byPattern(@Nonnull final FluentReflection reflection,
+                                                              @Nonnull final Pattern pattern)
+    {
+        Set<String> paths = reflection.getResources(pattern);
 
         //noinspection NullableProblems
         return FluentIterable.from(paths).transform(new Function<String, FluentResource>()
