@@ -91,7 +91,7 @@ public final class FluentResource implements AutoCloseable
     @Nonnull
     public static ListAutoCloseable<FluentResource> byPattern(@Nonnull final String pkcg, @Nonnull final String pattern)
     {
-        return byPattern(FluentReflection.forPackage(pkcg), Pattern.compile(pattern));
+        return byPattern(pkcg, Pattern.compile(pattern));
     }
 
 
