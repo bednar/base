@@ -102,7 +102,7 @@ public final class FluentReflection
     {
         Preconditions.checkNotNull(pattern);
 
-        Multimap<String,String> resources = reflections.getStore().get(ResourcesScanner.class);
+        Multimap<String, String> resources = reflections.getStore().get(ResourcesScanner.class);
         if (resources == null)
         {
             return Sets.newHashSet();
@@ -123,7 +123,7 @@ public final class FluentReflection
                 //remove package prefix
                 if (resourcePath.startsWith(pckgPath))
                 {
-                    resourcePath = resourcePath.replace(pckgPath, "");
+                    resourcePath = resourcePath.replaceFirst(pckgPath, "");
                 }
 
                 return pattern.matcher(resourcePath).matches();
