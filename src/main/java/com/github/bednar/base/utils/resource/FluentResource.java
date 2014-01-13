@@ -23,6 +23,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Supported prefix for {@link FluentResource#byPath(String)}:
+ *
+ * <ul>
+ *     <li>without  - /some/path/to/file.xml - Java resource on classpath</li>
+ *     <li>file     - file:///path/to/file/on/filesystem.xml - File anywhere on filesystem</li>
+ *     <li>file:jar - file:jar:commons.jar!com/apache/settings.properties - File directly from specific JAR</li>
+ * </ul>
+ *
  * @author Jakub Bednář (19/09/2013 5:40 PM)
  */
 public final class FluentResource implements AutoCloseable
