@@ -179,6 +179,12 @@ public final class FluentResource implements AutoCloseable
         return new InputStreamReader(asStream());
     }
 
+    @Nullable
+    public URL asURL()
+    {
+        return url;
+    }
+
     @Nonnull
     public String path()
     {

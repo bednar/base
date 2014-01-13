@@ -149,4 +149,15 @@ public class FluentResourceTest
             Assert.assertEquals(3, fluentResources.size());
         }
     }
+
+    @Test
+    public void asURL()
+    {
+        URL url = this.getClass().getResource("/resource.txt");
+
+        try (FluentResource resource = FluentResource.byURL(url))
+        {
+            Assert.assertEquals(url, resource.asURL());
+        }
+    }
 }
