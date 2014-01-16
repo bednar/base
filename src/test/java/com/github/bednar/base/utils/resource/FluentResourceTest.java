@@ -241,4 +241,17 @@ public class FluentResourceTest
             Assert.assertFalse(resource.isChangeable());
         }
     }
+
+    @Test
+    public void update()
+    {
+        try (FluentResource resource = FluentResource.byPath("/resourceForChange.txt"))
+        {
+            Assert.assertEquals("before change", resource.asString());
+
+            resource.update("after change");
+
+            Assert.assertEquals("after change", resource.asString());
+        }
+    }
 }

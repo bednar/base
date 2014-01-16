@@ -1,10 +1,6 @@
 package com.github.bednar.base.utils.resource;
 
-import javax.annotation.Nonnull;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 
 import org.junit.After;
 import org.junit.Before;
@@ -59,7 +55,7 @@ public class FluentChangeTest
         Thread.sleep(2000);
 
         LOG.info("write changes 1");
-        changeFile(resourceForChange);
+        resourceForChange.update(String.valueOf(System.currentTimeMillis()));
 
         LOG.info("wait for detect changes 1");
         Thread.sleep(10000);
@@ -67,7 +63,7 @@ public class FluentChangeTest
         Mockito.verify(announce, Mockito.times(1)).modified(Mockito.<Path>any());
 
         LOG.info("write changes 2");
-        changeFile(resourceForChange);
+        resourceForChange.update(String.valueOf(System.currentTimeMillis()));
 
         LOG.info("wait for detect changes 2");
         Thread.sleep(10000);
@@ -88,7 +84,7 @@ public class FluentChangeTest
         Thread.sleep(2000);
 
         LOG.info("write changes");
-        changeFile(resourceForChange);
+        resourceForChange.update(String.valueOf(System.currentTimeMillis()));
 
         LOG.info("wait for detect changes 1");
         Thread.sleep(10000);
@@ -109,8 +105,8 @@ public class FluentChangeTest
         Thread.sleep(2000);
 
         LOG.info("write changes");
-        changeFile(resourceForChange);
-        changeFile(resourceNotInterest);
+        resourceForChange.update(String.valueOf(System.currentTimeMillis()));
+        resourceNotInterest.update(String.valueOf(System.currentTimeMillis()));
 
         LOG.info("wait for detect changes 1");
         Thread.sleep(10000);
@@ -131,8 +127,8 @@ public class FluentChangeTest
         Thread.sleep(2000);
 
         LOG.info("write changes 1");
-        changeFile(resourceForChange);
-        changeFile(resourceNotInterest);
+        resourceForChange.update(String.valueOf(System.currentTimeMillis()));
+        resourceNotInterest.update(String.valueOf(System.currentTimeMillis()));
 
         LOG.info("wait for detect changes 1");
         Thread.sleep(10000);
@@ -142,19 +138,11 @@ public class FluentChangeTest
         fluentChange.addResources(resourceNotInterest);
 
         LOG.info("write changes 1");
-        changeFile(resourceNotInterest);
+        resourceNotInterest.update(String.valueOf(System.currentTimeMillis()));
 
         LOG.info("wait for detect changes 2");
         Thread.sleep(10000);
 
         Mockito.verify(announce, Mockito.times(2)).modified(Mockito.<Path>any());
-    }
-
-    private void changeFile(@Nonnull final FluentResource resource) throws Exception
-    {
-        byte[] data = Long.valueOf(System.currentTimeMillis()).toString().getBytes();
-        Path path   = Paths.get(resource.asURL().toURI());
-
-        Files.write(path, data, StandardOpenOption.SYNC);
     }
 }

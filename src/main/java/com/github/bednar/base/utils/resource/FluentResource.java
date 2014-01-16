@@ -21,6 +21,7 @@ import com.github.bednar.base.utils.throwable.FluentException;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.FluentIterable;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -248,6 +249,31 @@ public final class FluentResource implements AutoCloseable
         String path = path();
 
         return DIRECTORY_PATTERN.matcher(path).replaceAll("$1") + File.separatorChar;
+    }
+
+    @Nonnull
+    public FluentResource update(@Nullable final String content)
+    {
+        if (!isChangeable())
+        {
+            LOG.warn("[cannot-update][{}]", this);
+        }
+        else
+        {
+            try
+            {
+                //noinspection ConstantConditions
+                FileUtils.write(asPath().toFile(), content, "UTF-8");
+
+                this.stream = null;
+            }
+            catch (IOException e)
+            {
+                throw FluentException.internal(e);
+            }
+        }
+
+        return this;
     }
 
     @Override
