@@ -139,7 +139,7 @@ public final class FluentChange
                     {
                         if (path.equals(changedFile))
                         {
-                            announce.modified();
+                            announce.modified(changedFile);
 
                             break;
                         }
