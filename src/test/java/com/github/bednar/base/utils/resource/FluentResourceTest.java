@@ -2,8 +2,11 @@ package com.github.bednar.base.utils.resource;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.CheckForSigned;
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
 
 import com.github.bednar.base.utils.collection.ListAutoCloseable;
 import com.github.bednar.base.utils.throwable.FluentException;
@@ -158,6 +161,17 @@ public class FluentResourceTest
         try (FluentResource resource = FluentResource.byURL(url))
         {
             Assert.assertEquals(url, resource.asURL());
+        }
+    }
+
+    @Test
+    public void asPath() throws URISyntaxException
+    {
+        Path path = new File(this.getClass().getResource("/resource.txt").toURI()).toPath();
+
+        try (FluentResource resource = FluentResource.byPath("/resource.txt"))
+        {
+            Assert.assertEquals(path, resource.asPath());
         }
     }
 }

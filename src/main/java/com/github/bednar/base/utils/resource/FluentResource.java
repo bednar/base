@@ -8,7 +8,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -183,6 +186,26 @@ public final class FluentResource implements AutoCloseable
     public URL asURL()
     {
         return url;
+    }
+
+    @Nullable
+    public Path asPath()
+    {
+        if (url == null)
+        {
+            return null;
+        }
+        else
+        {
+            try
+            {
+                return Paths.get(url.toURI());
+            }
+            catch (URISyntaxException e)
+            {
+                throw FluentException.internal(e);
+            }
+        }
     }
 
     @Nonnull
