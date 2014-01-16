@@ -212,4 +212,33 @@ public class FluentResourceTest
             Assert.assertFalse(resource.isReloadable());
         }
     }
+
+    @Test
+    public void changeable()
+    {
+        try (FluentResource resource = FluentResource.byPath("/resource.txt"))
+        {
+            Assert.assertTrue(resource.isChangeable());
+        }
+    }
+
+    @Test
+    public void notChangeable()
+    {
+        String path = CheckForNull.class.getName().replaceAll("\\.", "/") + ".class";
+
+        try (FluentResource resource = FluentResource.byPath(path))
+        {
+            Assert.assertFalse(resource.isChangeable());
+        }
+    }
+
+    @Test
+    public void changeableForNotExist() throws URISyntaxException
+    {
+        try (FluentResource resource = FluentResource.byPath("/notexist/resource.txt"))
+        {
+            Assert.assertFalse(resource.isChangeable());
+        }
+    }
 }
