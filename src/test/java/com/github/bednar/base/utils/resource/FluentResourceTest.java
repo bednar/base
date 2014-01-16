@@ -174,4 +174,42 @@ public class FluentResourceTest
             Assert.assertEquals(path, resource.asPath());
         }
     }
+
+    @Test
+    public void asPathForNotExist() throws URISyntaxException
+    {
+        try (FluentResource resource = FluentResource.byPath("/notexist/resource.txt"))
+        {
+            Assert.assertNull(resource.asPath());
+        }
+    }
+
+    @Test
+    public void reloadable()
+    {
+        try (FluentResource resource = FluentResource.byPath("/resource.txt"))
+        {
+            Assert.assertTrue(resource.isReloadable());
+        }
+    }
+
+    @Test
+    public void notReloadable()
+    {
+        String path = CheckForNull.class.getName().replaceAll("\\.", "/") + ".class";
+
+        try (FluentResource resource = FluentResource.byPath(path))
+        {
+            Assert.assertFalse(resource.isReloadable());
+        }
+    }
+
+    @Test
+    public void reloadableForNotExist() throws URISyntaxException
+    {
+        try (FluentResource resource = FluentResource.byPath("/notexist/resource.txt"))
+        {
+            Assert.assertFalse(resource.isReloadable());
+        }
+    }
 }

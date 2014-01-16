@@ -209,6 +209,20 @@ public final class FluentResource implements AutoCloseable
     }
 
     @Nonnull
+    public Boolean isReloadable()
+    {
+        //noinspection SimplifiableIfStatement
+        if (url == null)
+        {
+            return false;
+        }
+        else
+        {
+            return url.getProtocol().equals("file");
+        }
+    }
+
+    @Nonnull
     public String path()
     {
         return url != null ? url.toExternalForm() : "";
