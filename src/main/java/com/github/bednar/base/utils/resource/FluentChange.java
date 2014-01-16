@@ -2,12 +2,9 @@ package com.github.bednar.base.utils.resource;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
@@ -48,19 +45,13 @@ public final class FluentChange
 
         for (FluentResource resource : resources)
         {
-            URL url = resource.asURL();
-            if (url == null)
+            if (resource.isReloadable())
             {
-                throw FluentException.internal("[url-is-null]");
+                paths.add(resource.asPath());
             }
-
-            try
+            else
             {
-                paths.add(Paths.get(url.toURI()));
-            }
-            catch (URISyntaxException e)
-            {
-                throw FluentException.internal(e);
+                 LOG.info("[resource-is-not-reloadable][{}]", resource);
             }
         }
 
