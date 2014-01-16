@@ -43,7 +43,7 @@ public class FluentChangeTest
     {
         FileChangeAnnounce announce = Mockito.mock(FileChangeAnnounce.class);
 
-        FluentChange.byResource(announce, resourceForChange);
+        FluentChange.byResources(announce, resourceForChange);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class FluentChangeTest
         FileChangeAnnounce announce = Mockito.mock(FileChangeAnnounce.class);
 
         FluentChange
-                .byResource(announce, resourceForChange)
+                .byResources(announce, resourceForChange)
                 .watchAssync();
 
         LOG.info("wait for register watch service");
@@ -81,7 +81,7 @@ public class FluentChangeTest
         FileChangeAnnounce announce = Mockito.mock(FileChangeAnnounce.class);
 
         FluentChange
-                .byResource(announce, resourceForChange)
+                .byResources(announce, resourceForChange)
                 .watchAssync();
 
         LOG.info("wait for register watch service");
@@ -95,6 +95,38 @@ public class FluentChangeTest
         Thread.sleep(10000);
 
         Mockito.verify(announce, Mockito.times(1)).modified();
+    }
+
+    @Test
+    public void addNewResource() throws Exception
+    {
+        FileChangeAnnounce announce = Mockito.mock(FileChangeAnnounce.class);
+
+        FluentChange fluentChange = FluentChange
+                .byResources(announce, resourceForChange)
+                .watchAssync();
+
+        LOG.info("wait for register watch service");
+        Thread.sleep(2000);
+
+        LOG.info("write changes 1");
+        changeFile(resourceForChange);
+        changeFile(resourceNotInterest);
+
+        LOG.info("wait for detect changes 1");
+        Thread.sleep(10000);
+
+        Mockito.verify(announce, Mockito.times(1)).modified();
+
+        fluentChange.addResources(resourceNotInterest);
+
+        LOG.info("write changes 1");
+        changeFile(resourceNotInterest);
+
+        LOG.info("wait for detect changes 2");
+        Thread.sleep(10000);
+
+        Mockito.verify(announce, Mockito.times(2)).modified();
     }
 
     private void changeFile(@Nonnull final FluentResource resource) throws Exception

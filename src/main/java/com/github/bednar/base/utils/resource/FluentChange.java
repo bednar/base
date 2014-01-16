@@ -1,6 +1,7 @@
 package com.github.bednar.base.utils.resource;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -26,39 +27,35 @@ public final class FluentChange
 {
     private static final Logger LOG = LoggerFactory.getLogger(FluentChange.class);
 
-    private final Set<Path> paths;
+    private final Set<Path> paths = Sets.newHashSet();
     private final FileChangeAnnounce announce;
     private final Map<WatchKey, Path> keys = Maps.newHashMap();
 
-    private WatchService watchService;
+    private final WatchService watchService;
 
-    private FluentChange(@Nonnull final FileChangeAnnounce announce, @Nonnull final Set<Path> paths)
+    private FluentChange(@Nonnull final FileChangeAnnounce announce, @Nullable final FluentResource... resources)
     {
         this.announce = announce;
-        this.paths = paths;
+        try
+        {
+            this.watchService = FileSystems.getDefault().newWatchService();
+        }
+        catch (IOException e)
+        {
+            throw FluentException.internal(e);
+        }
+
+        addResources(resources);
     }
 
     @Nonnull
-    public static FluentChange byResource(@Nonnull final FileChangeAnnounce announce, @Nonnull final FluentResource... resources)
+    public static FluentChange byResources(@Nonnull final FileChangeAnnounce announce, @Nullable final FluentResource... resources)
     {
-        Set<Path> paths = Sets.newHashSet();
-
-        for (FluentResource resource : resources)
-        {
-            if (resource.isReloadable())
-            {
-                paths.add(resource.asPath());
-            }
-            else
-            {
-                 LOG.info("[resource-is-not-reloadable][{}]", resource);
-            }
-        }
-
-        return new FluentChange(announce, paths);
+        return new FluentChange(announce, resources);
     }
 
-    public void watchAssync()
+    @Nonnull
+    public FluentChange watchAssync()
     {
         LOG.info("[start-assync-watch]");
 
@@ -80,18 +77,46 @@ public final class FluentChange
                                 }
                             }
                         });
+
+        return this;
+    }
+
+    @Nonnull
+    public FluentChange addResources(@Nullable final FluentResource... resources)
+    {
+        if (resources == null)
+        {
+            return this;
+        }
+        else
+        {
+            for (FluentResource resource : resources)
+            {
+                Path path = resource.asPath();
+                if (path != null && resource.isReloadable())
+                {
+                    try
+                    {
+                        registerPath(path);
+                    }
+                    catch (IOException e)
+                    {
+                        throw FluentException.internal(e);
+                    }
+                }
+                else
+                {
+                    LOG.info("[resource-is-not-reloadable][{}]", resource);
+                }
+            }
+        }
+
+        return this;
     }
 
     private void watch() throws IOException, InterruptedException
     {
         LOG.info("[start-watch]");
-
-        watchService = FileSystems.getDefault().newWatchService();
-
-        for (Path path : paths)
-        {
-            registerPath(path);
-        }
 
         while (true)
         {
@@ -138,6 +163,8 @@ public final class FluentChange
 
     private void registerPath(@Nonnull final Path path) throws IOException
     {
+        this.paths.add(path);
+
         if (Files.isDirectory(path))
         {
             registerDirectory(path);
