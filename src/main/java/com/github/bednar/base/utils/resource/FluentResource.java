@@ -225,6 +225,7 @@ public final class FluentResource implements AutoCloseable
     @Nonnull
     public Boolean isChangeable()
     {
+        //noinspection SimplifiableIfStatement
         if (url == null)
         {
             return false;
