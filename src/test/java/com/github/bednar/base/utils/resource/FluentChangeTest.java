@@ -7,9 +7,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,13 +41,15 @@ public class FluentChangeTest
     @Test
     public void createInstance()
     {
-        FluentChange.byResource(new CounterAnnounce(), resourceForChange);
+        FileChangeAnnounce announce = Mockito.mock(FileChangeAnnounce.class);
+
+        FluentChange.byResource(announce, resourceForChange);
     }
 
     @Test
     public void watchAssync() throws Exception
     {
-        CounterAnnounce announce = new CounterAnnounce();
+        FileChangeAnnounce announce = Mockito.mock(FileChangeAnnounce.class);
 
         FluentChange
                 .byResource(announce, resourceForChange)
@@ -62,7 +64,7 @@ public class FluentChangeTest
         LOG.info("wait for detect changes 1");
         Thread.sleep(10000);
 
-        Assert.assertEquals((Object) 1, announce.getCount());
+        Mockito.verify(announce, Mockito.times(1)).modified();
 
         LOG.info("write changes 2");
         changeFile(resourceForChange);
@@ -70,13 +72,13 @@ public class FluentChangeTest
         LOG.info("wait for detect changes 2");
         Thread.sleep(10000);
 
-        Assert.assertEquals((Object) 2, announce.getCount());
+        Mockito.verify(announce, Mockito.times(2)).modified();
     }
 
     @Test
     public void watchAssyncOnlyInterestFile() throws Exception
     {
-        CounterAnnounce announce = new CounterAnnounce();
+        FileChangeAnnounce announce = Mockito.mock(FileChangeAnnounce.class);
 
         FluentChange
                 .byResource(announce, resourceForChange)
@@ -92,24 +94,7 @@ public class FluentChangeTest
         LOG.info("wait for detect changes 1");
         Thread.sleep(10000);
 
-        Assert.assertEquals((Object) 1, announce.getCount());
-    }
-
-    private class CounterAnnounce implements FileChangeAnnounce
-    {
-        private Integer count = 0;
-
-        @Override
-        public void modified()
-        {
-            this.count++;
-        }
-
-        @Nonnull
-        public Integer getCount()
-        {
-            return count;
-        }
+        Mockito.verify(announce, Mockito.times(1)).modified();
     }
 
     private void changeFile(@Nonnull final FluentResource resource) throws Exception
