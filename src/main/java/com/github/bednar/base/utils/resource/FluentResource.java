@@ -278,14 +278,14 @@ public final class FluentResource implements AutoCloseable
             {
                 //noinspection ConstantConditions
                 FileUtils.write(asPath().toFile(), content, "UTF-8");
-
-                this.stream = null;
             }
             catch (IOException e)
             {
                 throw FluentException.internal(e);
             }
         }
+
+        close();
 
         return this;
     }
@@ -303,6 +303,8 @@ public final class FluentResource implements AutoCloseable
             {
                 throw FluentException.internal(e);
             }
+
+            stream = null;
         }
     }
 

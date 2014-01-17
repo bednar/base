@@ -256,6 +256,21 @@ public class FluentResourceTest
     }
 
     @Test
+    public void updateForNotChangable()
+    {
+        String path = CheckForNull.class.getName().replaceAll("\\.", "/") + ".class";
+
+        try (FluentResource resource = FluentResource.byPath(path))
+        {
+            String beforeUpdate = resource.asString();
+
+            resource.update("not apply");
+
+            Assert.assertEquals(beforeUpdate, resource.asString());
+        }
+    }
+
+    @Test
     public void deletable()
     {
         try (FluentResource resource = FluentResource.byPath("/resource.txt"))
