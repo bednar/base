@@ -148,7 +148,7 @@ public final class FluentResource implements AutoCloseable
             }
             catch (IOException e)
             {
-                LOG.error("[cannot-open-stream]", e);
+                LOG.warn("[cannot-open-stream][{}]", e.getMessage());
 
                 return null;
             }
