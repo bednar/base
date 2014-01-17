@@ -298,4 +298,30 @@ public class FluentResourceTest
             Assert.assertFalse(resource.isDeletable());
         }
     }
+
+    @Test
+    public void delete()
+    {
+        try (FluentResource resource = FluentResource.byPath("/resourceForDelete.txt"))
+        {
+            Assert.assertTrue(resource.exists());
+
+            resource.delete();
+
+            Assert.assertFalse(resource.exists());
+        }
+    }
+
+    @Test
+    public void deleteForNotChangable()
+    {
+        String path = CheckForNull.class.getName().replaceAll("\\.", "/") + ".class";
+
+        try (FluentResource resource = FluentResource.byPath(path))
+        {
+            resource.delete();
+
+            Assert.assertTrue(resource.exists());
+        }
+    }
 }

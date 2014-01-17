@@ -290,6 +290,24 @@ public final class FluentResource implements AutoCloseable
         return this;
     }
 
+    @Nonnull
+    public FluentResource delete()
+    {
+        if (!isDeletable())
+        {
+            LOG.warn("[cannot-delete][{}]", this);
+        }
+        else
+        {
+            //noinspection ConstantConditions
+            FileUtils.deleteQuietly(asPath().toFile());
+        }
+
+        close();
+
+        return this;
+    }
+
     @Override
     public void close()
     {
