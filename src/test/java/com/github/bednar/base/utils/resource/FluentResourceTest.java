@@ -254,4 +254,33 @@ public class FluentResourceTest
             Assert.assertEquals("after change", resource.asString());
         }
     }
+
+    @Test
+    public void deletable()
+    {
+        try (FluentResource resource = FluentResource.byPath("/resource.txt"))
+        {
+            Assert.assertTrue(resource.isDeletable());
+        }
+    }
+
+    @Test
+    public void notDeletable()
+    {
+        String path = CheckForNull.class.getName().replaceAll("\\.", "/") + ".class";
+
+        try (FluentResource resource = FluentResource.byPath(path))
+        {
+            Assert.assertFalse(resource.isDeletable());
+        }
+    }
+
+    @Test
+    public void deletableForNotExist() throws URISyntaxException
+    {
+        try (FluentResource resource = FluentResource.byPath("/notexist/resource.txt"))
+        {
+            Assert.assertFalse(resource.isDeletable());
+        }
+    }
 }
