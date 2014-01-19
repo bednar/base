@@ -28,8 +28,8 @@ public final class FluentChange
     private static final Logger LOG = LoggerFactory.getLogger(FluentChange.class);
 
     private final Set<Path> paths = Sets.newHashSet();
-    private final FileChangeAnnounce announce;
     private final Map<WatchKey, Path> keys = Maps.newHashMap();
+    private final FileChangeAnnounce announce;
 
     private final WatchService watchService;
 

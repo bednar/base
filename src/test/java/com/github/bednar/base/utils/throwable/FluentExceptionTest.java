@@ -50,4 +50,13 @@ public class FluentExceptionTest
 
         Assert.assertNull(internal.getReason());
     }
+
+    @Test
+    public void formatting()
+    {
+        FluentException internal = FluentException.internal("{} - {}", 1, 2);
+
+        Assert.assertNull(internal.getReason());
+        Assert.assertEquals("1 - 2", internal.getUiMessage());
+    }
 }
