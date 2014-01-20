@@ -73,7 +73,7 @@ public class FluentChangeTest
     }
 
     @Test
-    public void changeContext() throws Exception
+    public void modifiedChangeContext() throws Exception
     {
         FileChangeAnnounce announce = Mockito.mock(FileChangeAnnounce.class);
 
@@ -94,7 +94,7 @@ public class FluentChangeTest
         LOG.info("wait for detect changes 1");
         Thread.sleep(CHANGE_WAIT);
 
-        Mockito.verify(announce, Mockito.times(1)).modified(changeContext);
+        Mockito.verify(announce, Mockito.atLeastOnce()).modified(changeContext);
     }
 
     @Test
