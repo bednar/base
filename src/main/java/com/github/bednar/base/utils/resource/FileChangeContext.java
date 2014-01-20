@@ -42,6 +42,15 @@ public final class FileChangeContext
             throw FluentException.internal("[resource-is-not-reloadable][{}]", resource);
         }
 
+        return byPath(path);
+    }
+
+    @Nonnull
+    public static FileChangeContext byPath(@Nonnull final Path path)
+    {
+        //noinspection ConstantConditions
+        Preconditions.checkArgument(path != null);
+
         return new FileChangeContext(path);
     }
 
