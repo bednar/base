@@ -11,10 +11,12 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Executors;
 
 import com.github.bednar.base.utils.throwable.FluentException;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -140,14 +142,18 @@ public final class FluentChange
 
                 LOG.info("[watch-event][{}][{}]", kind, context);
 
+                Set<Path> processed = Sets.newHashSet();
+
                 if (kind.equals(StandardWatchEventKinds.ENTRY_MODIFY))
                 {
                     final Path changedFile = resolveFile(key, context);
 
                     FileChangeContext changeContext = paths.get(changedFile);
-                    if (changeContext != null)
+                    if (changeContext != null && !processed.contains(changedFile))
                     {
                         announce.modified(changeContext);
+
+                        processed.add(changedFile);
                     }
                 }
 
