@@ -1,7 +1,5 @@
 package com.github.bednar.base.utils.resource;
 
-import java.nio.file.Path;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,7 +61,7 @@ public class FluentChangeTest
         LOG.info("wait for detect changes 1");
         Thread.sleep(CHANGE_WAIT);
 
-        Mockito.verify(announce, Mockito.times(1)).modified(Mockito.<Path>any());
+        Mockito.verify(announce, Mockito.times(1)).modified(Mockito.<FileChangeContext>any());
 
         LOG.info("write changes 2");
         resourceForChange.update(String.valueOf(System.currentTimeMillis()));
@@ -71,16 +69,20 @@ public class FluentChangeTest
         LOG.info("wait for detect changes 2");
         Thread.sleep(CHANGE_WAIT);
 
-        Mockito.verify(announce, Mockito.times(2)).modified(Mockito.<Path>any());
+        Mockito.verify(announce, Mockito.times(2)).modified(Mockito.<FileChangeContext>any());
     }
 
     @Test
-    public void modifiedPath() throws Exception
+    public void changeContext() throws Exception
     {
         FileChangeAnnounce announce = Mockito.mock(FileChangeAnnounce.class);
 
+        FileChangeContext changeContext = FileChangeContext
+                .byResource(resourceForChange);
+
         FluentChange
-                .byResources(announce, resourceForChange)
+                .byResources(announce)
+                .addFileChangeContext(changeContext)
                 .watchAssync();
 
         LOG.info("wait for register watch service");
@@ -92,7 +94,7 @@ public class FluentChangeTest
         LOG.info("wait for detect changes 1");
         Thread.sleep(CHANGE_WAIT);
 
-        Mockito.verify(announce, Mockito.times(1)).modified(resourceForChange.asPath());
+        Mockito.verify(announce, Mockito.times(1)).modified(changeContext);
     }
 
     @Test
@@ -114,7 +116,7 @@ public class FluentChangeTest
         LOG.info("wait for detect changes 1");
         Thread.sleep(CHANGE_WAIT);
 
-        Mockito.verify(announce, Mockito.times(1)).modified(Mockito.<Path>any());
+        Mockito.verify(announce, Mockito.times(1)).modified(Mockito.<FileChangeContext>any());
     }
 
     @Test
@@ -136,7 +138,7 @@ public class FluentChangeTest
         LOG.info("wait for detect changes 1");
         Thread.sleep(CHANGE_WAIT);
 
-        Mockito.verify(announce, Mockito.times(1)).modified(Mockito.<Path>any());
+        Mockito.verify(announce, Mockito.times(1)).modified(Mockito.<FileChangeContext>any());
 
         fluentChange.addResources(resourceNotInterest);
 
@@ -146,6 +148,6 @@ public class FluentChangeTest
         LOG.info("wait for detect changes 2");
         Thread.sleep(CHANGE_WAIT);
 
-        Mockito.verify(announce, Mockito.times(2)).modified(Mockito.<Path>any());
+        Mockito.verify(announce, Mockito.times(2)).modified(Mockito.<FileChangeContext>any());
     }
 }

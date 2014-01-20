@@ -1,0 +1,70 @@
+package com.github.bednar.base.utils.resource;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.Serializable;
+import java.nio.file.Path;
+import java.util.Map;
+
+import com.github.bednar.base.utils.throwable.FluentException;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author Jakub Bednář (19/01/2014 08:32)
+ */
+public final class FileChangeContext
+{
+    private static final Logger LOG = LoggerFactory.getLogger(FileChangeContext.class);
+
+    private Map<String, Serializable> context = Maps.newHashMap();
+
+    private final Path path;
+
+    private FileChangeContext(@Nonnull final Path path)
+    {
+        this.path = path;
+    }
+
+    @Nonnull
+    public static FileChangeContext byResource(@Nonnull final FluentResource resource)
+    {
+        Path path = resource.asPath();
+        if (path == null)
+        {
+            throw FluentException.internal("[resource-path-is-null][{}]", resource);
+        }
+
+        if (!resource.isReloadable())
+        {
+            throw FluentException.internal("[resource-is-not-reloadable][{}]", resource);
+        }
+
+        return new FileChangeContext(path);
+    }
+
+    @Nonnull
+    public FileChangeContext addContext(@Nonnull final String key, @Nullable final Serializable value)
+    {
+        //noinspection ConstantConditions
+        Preconditions.checkArgument(key != null);
+
+        context.put(key, value);
+
+        return this;
+    }
+
+    @Nonnull
+    public Map<String, Serializable> getContext()
+    {
+        return context;
+    }
+
+    @Nonnull
+    public Path getPath()
+    {
+        return path;
+    }
+}

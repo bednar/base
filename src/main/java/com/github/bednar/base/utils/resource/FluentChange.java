@@ -11,12 +11,10 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Executors;
 
 import com.github.bednar.base.utils.throwable.FluentException;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +25,7 @@ public final class FluentChange
 {
     private static final Logger LOG = LoggerFactory.getLogger(FluentChange.class);
 
-    private final Set<Path> paths = Sets.newHashSet();
+    private final Map<Path, FileChangeContext> paths = Maps.newHashMap();
     private final Map<WatchKey, Path> keys = Maps.newHashMap();
     private final FileChangeAnnounce announce;
 
@@ -82,33 +80,44 @@ public final class FluentChange
     }
 
     @Nonnull
+    public FluentChange addFileChangeContext(@Nullable final FileChangeContext... contexts)
+    {
+        if (contexts == null)
+        {
+            return this;
+        }
+        else
+        {
+            for (FileChangeContext context : contexts)
+            {
+                try
+                {
+                    registerPath(context);
+                }
+                catch (IOException e)
+                {
+                    throw FluentException.internal(e);
+                }
+
+            }
+        }
+
+        return this;
+    }
+
+    @Nonnull
     public FluentChange addResources(@Nullable final FluentResource... resources)
     {
         if (resources == null)
         {
             return this;
         }
-        else
+
+        for (FluentResource resource : resources)
         {
-            for (FluentResource resource : resources)
-            {
-                Path path = resource.asPath();
-                if (path != null && resource.isReloadable())
-                {
-                    try
-                    {
-                        registerPath(path);
-                    }
-                    catch (IOException e)
-                    {
-                        throw FluentException.internal(e);
-                    }
-                }
-                else
-                {
-                    LOG.info("[resource-is-not-reloadable][{}]", resource);
-                }
-            }
+            FileChangeContext context = FileChangeContext.byResource(resource);
+
+            addFileChangeContext(context);
         }
 
         return this;
@@ -135,14 +144,10 @@ public final class FluentChange
                 {
                     final Path changedFile = resolveFile(key, context);
 
-                    for (Path path : paths)
+                    FileChangeContext changeContext = paths.get(changedFile);
+                    if (changeContext != null)
                     {
-                        if (path.equals(changedFile))
-                        {
-                            announce.modified(changedFile);
-
-                            break;
-                        }
+                        announce.modified(changeContext);
                     }
                 }
 
@@ -161,9 +166,11 @@ public final class FluentChange
         }
     }
 
-    private void registerPath(@Nonnull final Path path) throws IOException
+    private void registerPath(@Nonnull final FileChangeContext context) throws IOException
     {
-        this.paths.add(path);
+        Path path = context.getPath();
+
+        this.paths.put(path, context);
 
         if (Files.isDirectory(path))
         {
