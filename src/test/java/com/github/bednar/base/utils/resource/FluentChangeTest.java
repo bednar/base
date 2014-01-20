@@ -17,6 +17,9 @@ public class FluentChangeTest
 {
     private static final Logger LOG = LoggerFactory.getLogger(FluentChangeTest.class);
 
+    private static final int REGISTER_WAIT = 5000;
+    private static final int CHANGE_WAIT = 20000;
+
     private FluentResource resourceForChange;
     private FluentResource resourceNotInterest;
 
@@ -52,13 +55,13 @@ public class FluentChangeTest
                 .watchAssync();
 
         LOG.info("wait for register watch service");
-        Thread.sleep(2000);
+        Thread.sleep(REGISTER_WAIT);
 
         LOG.info("write changes 1");
         resourceForChange.update(String.valueOf(System.currentTimeMillis()));
 
         LOG.info("wait for detect changes 1");
-        Thread.sleep(10000);
+        Thread.sleep(CHANGE_WAIT);
 
         Mockito.verify(announce, Mockito.times(1)).modified(Mockito.<Path>any());
 
@@ -66,7 +69,7 @@ public class FluentChangeTest
         resourceForChange.update(String.valueOf(System.currentTimeMillis()));
 
         LOG.info("wait for detect changes 2");
-        Thread.sleep(10000);
+        Thread.sleep(CHANGE_WAIT);
 
         Mockito.verify(announce, Mockito.times(2)).modified(Mockito.<Path>any());
     }
@@ -81,13 +84,13 @@ public class FluentChangeTest
                 .watchAssync();
 
         LOG.info("wait for register watch service");
-        Thread.sleep(2000);
+        Thread.sleep(REGISTER_WAIT);
 
         LOG.info("write changes");
         resourceForChange.update(String.valueOf(System.currentTimeMillis()));
 
         LOG.info("wait for detect changes 1");
-        Thread.sleep(10000);
+        Thread.sleep(CHANGE_WAIT);
 
         Mockito.verify(announce, Mockito.times(1)).modified(resourceForChange.asPath());
     }
@@ -102,14 +105,14 @@ public class FluentChangeTest
                 .watchAssync();
 
         LOG.info("wait for register watch service");
-        Thread.sleep(2000);
+        Thread.sleep(REGISTER_WAIT);
 
         LOG.info("write changes");
         resourceForChange.update(String.valueOf(System.currentTimeMillis()));
         resourceNotInterest.update(String.valueOf(System.currentTimeMillis()));
 
         LOG.info("wait for detect changes 1");
-        Thread.sleep(10000);
+        Thread.sleep(CHANGE_WAIT);
 
         Mockito.verify(announce, Mockito.times(1)).modified(Mockito.<Path>any());
     }
@@ -124,14 +127,14 @@ public class FluentChangeTest
                 .watchAssync();
 
         LOG.info("wait for register watch service");
-        Thread.sleep(2000);
+        Thread.sleep(REGISTER_WAIT);
 
         LOG.info("write changes 1");
         resourceForChange.update(String.valueOf(System.currentTimeMillis()));
         resourceNotInterest.update(String.valueOf(System.currentTimeMillis()));
 
         LOG.info("wait for detect changes 1");
-        Thread.sleep(10000);
+        Thread.sleep(CHANGE_WAIT);
 
         Mockito.verify(announce, Mockito.times(1)).modified(Mockito.<Path>any());
 
@@ -141,7 +144,7 @@ public class FluentChangeTest
         resourceNotInterest.update(String.valueOf(System.currentTimeMillis()));
 
         LOG.info("wait for detect changes 2");
-        Thread.sleep(10000);
+        Thread.sleep(CHANGE_WAIT);
 
         Mockito.verify(announce, Mockito.times(2)).modified(Mockito.<Path>any());
     }
