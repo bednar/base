@@ -48,8 +48,12 @@ public class FluentChangeTest
     {
         FileChangeAnnounce announce = Mockito.mock(FileChangeAnnounce.class);
 
+        FileChangeContext context = FileChangeContext
+                .byResource(resourceForChange);
+
         FluentChange
-                .byResources(announce, resourceForChange)
+                .byResources(announce)
+                .addFileChangeContext(context)
                 .watchAssync();
 
         LOG.info("wait for register watch service");
@@ -61,7 +65,7 @@ public class FluentChangeTest
         LOG.info("wait for detect changes 1");
         Thread.sleep(CHANGE_WAIT);
 
-        Mockito.verify(announce, Mockito.times(1)).modified(Mockito.<FileChangeContext>any());
+        Mockito.verify(announce, Mockito.atLeast(1)).modified(context);
 
         LOG.info("write changes 2");
         resourceForChange.update(String.valueOf(System.currentTimeMillis()));
@@ -69,7 +73,7 @@ public class FluentChangeTest
         LOG.info("wait for detect changes 2");
         Thread.sleep(CHANGE_WAIT);
 
-        Mockito.verify(announce, Mockito.times(2)).modified(Mockito.<FileChangeContext>any());
+        Mockito.verify(announce, Mockito.atLeast(2)).modified(context);
     }
 
     @Test
@@ -102,8 +106,12 @@ public class FluentChangeTest
     {
         FileChangeAnnounce announce = Mockito.mock(FileChangeAnnounce.class);
 
+        FileChangeContext context = FileChangeContext
+                .byResource(resourceForChange);
+
         FluentChange
-                .byResources(announce, resourceForChange)
+                .byResources(announce)
+                .addFileChangeContext(context)
                 .watchAssync();
 
         LOG.info("wait for register watch service");
@@ -116,7 +124,7 @@ public class FluentChangeTest
         LOG.info("wait for detect changes 1");
         Thread.sleep(CHANGE_WAIT);
 
-        Mockito.verify(announce, Mockito.times(1)).modified(Mockito.<FileChangeContext>any());
+        Mockito.verify(announce, Mockito.times(1)).modified(context);
     }
 
     @Test
