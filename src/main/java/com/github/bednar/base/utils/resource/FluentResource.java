@@ -140,6 +140,11 @@ public final class FluentResource implements AutoCloseable
     @Nullable
     public InputStream asStream()
     {
+        if (stream != null)
+        {
+            close();
+        }
+
         if (url != null && stream == null)
         {
             try

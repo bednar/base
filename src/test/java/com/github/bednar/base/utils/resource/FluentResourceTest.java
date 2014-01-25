@@ -25,6 +25,7 @@ public class FluentResourceTest
         try (FluentResource resource = FluentResource.byPath("/resource.txt"))
         {
             Assert.assertEquals("Testing Resource Content", resource.asString());
+            Assert.assertEquals("Testing Resource Content", resource.asString());
         }
     }
 
