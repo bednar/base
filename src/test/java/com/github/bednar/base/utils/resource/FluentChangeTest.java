@@ -195,6 +195,6 @@ public class FluentChangeTest
         LOG.info("wait for changes");
         Thread.sleep(CHANGE_WAIT);
 
-        Mockito.verify(announce, Mockito.times(1)).modified(Mockito.<FileChangeContext>any());
+        Mockito.verify(announce, Mockito.atLeast(1)).modified(Mockito.<FileChangeContext>any());
     }
 }
