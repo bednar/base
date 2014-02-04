@@ -63,6 +63,17 @@ public final class FileChangeContext
     }
 
     @Nonnull
+    public static FileChangeContext byPathPattern(@Nonnull final Path path, @Nonnull final Pattern pattern)
+    {
+        //noinspection ConstantConditions
+        Preconditions.checkArgument(path != null);
+        //noinspection ConstantConditions
+        Preconditions.checkArgument(pattern != null);
+
+        return new FileChangeContext(path, pattern);
+    }
+
+    @Nonnull
     public FileChangeContext addContext(@Nonnull final String key, @Nullable final Serializable value)
     {
         //noinspection ConstantConditions

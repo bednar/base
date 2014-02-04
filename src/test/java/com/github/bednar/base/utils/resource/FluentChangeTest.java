@@ -1,5 +1,10 @@
 package com.github.bednar.base.utils.resource;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.regex.Pattern;
+
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -157,5 +162,39 @@ public class FluentChangeTest
         Thread.sleep(CHANGE_WAIT);
 
         Mockito.verify(announce, Mockito.times(2)).modified(Mockito.<FileChangeContext>any());
+    }
+
+    @Test
+    public void byPathPattern() throws IOException, InterruptedException
+    {
+        FileChangeAnnounce announce = Mockito.mock(FileChangeAnnounce.class);
+
+        FluentChange fluentChange = FluentChange
+                .byResources(announce)
+                .watchAssync();
+
+        Path dir;
+        try (FluentResource resource = FluentResource.byPath("/resource.txt"))
+        {
+            dir = resource
+                    .asPath()
+                    .getParent()
+                    .resolve("directoryForChange");
+        }
+
+        FileChangeContext context = FileChangeContext
+                .byPathPattern(dir, Pattern.compile(".*\\.txt"));
+
+        fluentChange.addFileChangeContext(context);
+
+        Path testTxt = dir.resolve("test.txt");
+
+        LOG.info("write to file: " + testTxt.toString());
+        FileUtils.write(testTxt.toFile(), "data", "UTF-8");
+
+        LOG.info("wait for changes");
+        Thread.sleep(CHANGE_WAIT);
+
+        Mockito.verify(announce, Mockito.times(1)).modified(Mockito.<FileChangeContext>any());
     }
 }
