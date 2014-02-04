@@ -187,7 +187,7 @@ public class FluentChangeTest
 
         fluentChange.addFileChangeContext(context);
 
-        Path testTxt = dir.resolve("test.txt");
+        Path testTxt = dir.resolve("changeInPattern.txt");
 
         LOG.info("write to file: " + testTxt.toString());
         FileUtils.write(testTxt.toFile(), "data", "UTF-8");
