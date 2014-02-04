@@ -12,6 +12,7 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.Map;
 import java.util.concurrent.Executors;
+import java.util.regex.Pattern;
 
 import com.github.bednar.base.utils.throwable.FluentException;
 import com.google.common.collect.Maps;
@@ -25,7 +26,7 @@ public final class FluentChange
 {
     private static final Logger LOG = LoggerFactory.getLogger(FluentChange.class);
 
-    private final Map<Path, FileChangeContext> paths = Maps.newHashMap();
+    private final Map<Pattern, FileChangeContext> paths = Maps.newHashMap();
     private final Map<WatchKey, Path> keys = Maps.newHashMap();
     private final FileChangeAnnounce announce;
 
@@ -144,10 +145,16 @@ public final class FluentChange
                 {
                     final Path changedFile = resolveFile(key, context);
 
-                    FileChangeContext changeContext = paths.get(changedFile);
-                    if (changeContext != null)
+                    for (Pattern pattern : paths.keySet())
                     {
-                        announce.modified(changeContext);
+                        if (pattern.matcher(changedFile.toString()).matches())
+                        {
+                            FileChangeContext changeContext = paths.get(pattern);
+
+                            announce.modified(changeContext);
+
+                            break;
+                        }
                     }
                 }
 
@@ -168,9 +175,10 @@ public final class FluentChange
 
     private void registerPath(@Nonnull final FileChangeContext context) throws IOException
     {
-        Path path = context.getPath();
+        Path path       = context.getPath();
+        Pattern pattern = context.getPattern();
 
-        this.paths.put(path, context);
+        this.paths.put(pattern, context);
 
         if (Files.isDirectory(path))
         {

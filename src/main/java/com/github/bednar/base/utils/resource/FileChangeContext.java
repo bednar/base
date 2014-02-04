@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import com.github.bednar.base.utils.throwable.FluentException;
 import com.google.common.base.Preconditions;
@@ -22,10 +23,17 @@ public final class FileChangeContext
     private Map<String, Serializable> context = Maps.newHashMap();
 
     private final Path path;
+    private final Pattern pattern;
 
     private FileChangeContext(@Nonnull final Path path)
     {
+        this(path, Pattern.compile(path.toString()));
+    }
+
+    private FileChangeContext(@Nonnull final Path path, @Nonnull final Pattern pattern)
+    {
         this.path = path;
+        this.pattern = pattern;
     }
 
     @Nonnull
@@ -75,5 +83,11 @@ public final class FileChangeContext
     public Path getPath()
     {
         return path;
+    }
+
+    @Nonnull
+    public Pattern getPattern()
+    {
+        return pattern;
     }
 }
